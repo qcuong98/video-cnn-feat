@@ -84,7 +84,7 @@ def get_feat_extractor(model_prefix, gpuid=DEVICE_ID, batch_size=1, oversample=T
 def extract_feature(model, batch_size, imset, path_imgs, sub_mean=False, oversample=True):
     assert(len(imset)==1)
     impath = path_imgs[0]
-    img = mx.image.imdecode(open(impath).read())
+    img = mx.image.imdecode(open(impath, 'rb').read())
 
     mxnet_in = preprocess_images([img], sub_mean=sub_mean, oversample=oversample)
     model.forward(mxnet_in)

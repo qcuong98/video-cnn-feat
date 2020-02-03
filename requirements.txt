@@ -1,4 +1,4 @@
-mxnet-cu90==1.1.0.post0
-numpy==1.14.6
+mxnet-cu100
+numpy==1.16.2
 opencv-python==3.4.0.12
 six==1.13.0

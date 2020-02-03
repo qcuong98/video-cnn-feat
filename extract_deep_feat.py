@@ -12,6 +12,7 @@ from constant import *
 from utils.generic_utils import Progbar
 from mxnet_feat_os import get_feat_extractor, extract_feature
 
+import traceback
 
 logger = logging.getLogger(__file__)
 logging.basicConfig(
@@ -59,8 +60,9 @@ def process(options, collection):
 
     id_path_file = os.path.join(rootpath, collection, 'id.imagepath.txt')
     data = map(str.strip, open(id_path_file).readlines())
-    img_ids = [x.split()[0] for x in data]
-    filenames = [x.split()[1] for x in data]
+    data = [x.split() for x in data]
+    img_ids = [x[0] for x in data]
+    filenames = [x[1] for x in data]
 
     fe_mod = get_feat_extractor(model_prefix=model_prefix, gpuid=options.gpu, oversample=oversample)
     if fe_mod is None:
@@ -79,7 +81,7 @@ def process(options, collection):
 
     start_time = time.time()
     logger.info('%d images, %d done, %d to do', len(img_ids), 0, len(img_ids))
-    progbar = Progbar(len(im2path))
+    progbar = Progbar(len(list(img_ids)))
 
     for i, (imgid, impath) in enumerate(im2path):
         try:
@@ -88,6 +90,7 @@ def process(options, collection):
             success += 1
         except Exception as e:
             fail += 1
+            print(traceback.format_exc())
             logger.error('failed to process %s', impath)
             logger.info('%d success, %d fail', success, fail)
             fails_id_path.append((imgid, impath))
@@ -123,7 +126,7 @@ def main(argv=None):
         parser.print_help()
         return 1
     
-    print json.dumps(vars(options), indent = 2)
+    print(json.dumps(vars(options), indent = 2))
     
     return process(options, args[0])
 

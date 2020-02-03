@@ -144,11 +144,11 @@ if __name__ == '__main__':
 
 
     for name,vec in zip(renamed, vectors):
-        print name, vec
+        print(name, vec)
         
     bigfile = StreamFile(feat_dir)
     bigfile.open()
     for name, vec in bigfile:
-        print name, vec
+        print(name, vec)
     bigfile.close()
 
